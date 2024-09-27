@@ -72,7 +72,7 @@ Users can send images, videos, and audio clips directly in the chat. For example
 
 - **Images & Videos:**
   ![Image Example](./ScreenShots/Screenshot%20(172).png)
-  ![Video Example](./screenshots/Screenshot%20(174).png)
+  ![Video Example](./ScreenShots/Screenshot%20(174).png)
 
 - **Audio Recording:**
   The app provides an option for in-browser audio recording. Users can start and stop recording, and the message gets transmitted in `.ogg` format.
