@@ -96,8 +96,6 @@ Users can leave the chat anytime by clicking the 'Leave Chat' button, which also
 - **WebSocket Communication:** Debugged WebSocket issues where messages were not displaying correctly.
 - **Undefined Variables:** Addressed cases where `currentUser` or `userName` was undefined, resulting in chat display issues.
 
-## Website Layout
-![Chat Layout]()
 
 
 ## How to Contribute:
