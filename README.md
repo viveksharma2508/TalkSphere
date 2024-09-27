@@ -71,8 +71,8 @@ Messages are exchanged in real-time using Socket.io, ensuring that all connected
 Users can send images, videos, and audio clips directly in the chat. For example, a user can upload a `.png`, `.jpg`, `.mp4`, or even record audio messages.
 
 - **Images & Videos:**
-  ![Image Example](./screenshots/image-example.png)
-  ![Video Example](./screenshots/video-example.png)
+  ![Image Example](./ScreenShots/Screenshot%20(172).png)
+  ![Video Example](./screenshots/Screenshot%20(174).png)
 
 - **Audio Recording:**
   The app provides an option for in-browser audio recording. Users can start and stop recording, and the message gets transmitted in `.ogg` format.
@@ -82,10 +82,11 @@ Users can send images, videos, and audio clips directly in the chat. For example
 ### 3. User Profiles
 Upon joining, users can choose a username and optionally upload a profile photo.
 
+
 ### 4. Audio Recording Feature
 Users can record audio directly in the chat interface. Once the recording is stopped, the message is sent as an audio file.
   
-![Audio Recording Example](./screenshots/audio-recording.png)
+![Audio Recording Example](![Chat Layout](./ScreenShots/Screenshot%20(173).png))
 
 ### 5. Leave Chat
 Users can leave the chat anytime by clicking the 'Leave Chat' button, which also clears session data.
@@ -96,8 +97,8 @@ Users can leave the chat anytime by clicking the 'Leave Chat' button, which also
 - **Undefined Variables:** Addressed cases where `currentUser` or `userName` was undefined, resulting in chat display issues.
 
 ## Website Layout
-![Chat Layout](./ScreenShots/Screenshot%20(172).png)
-![Chat Layout](./ScreenShots/Screenshot%20(173).png)
+![Chat Layout]()
+
 
 ## How to Contribute:
 1. Fork the repository.
