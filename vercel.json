@@ -1,5 +1,26 @@
 {
+  "version": 2,
+  "builds": [
+    {
+      "src": "FrontEnd/my-react/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "FrontEnd/my-react/dist"
+      }
+    },
+    {
+      "src": "BackEnd/server.js",
+      "use": "@vercel/node"
+    }
+  ],
   "routes": [
-    { "src": "/(.*)", "dest": "/" }
+    {
+      "src": "/api/(.*)",
+      "dest": "/BackEnd/server.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/Frontend/my-react/dist/index.html"
+    }
   ]
 }
