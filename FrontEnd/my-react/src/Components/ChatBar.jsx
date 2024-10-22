@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import StyledAvatar from '../Styles/StyledAvatar';
 
 const ChatBar = ({ socket }) => {
     const [users, setUsers] = useState([]);
@@ -17,13 +18,8 @@ const ChatBar = ({ socket }) => {
     const currentUser = sessionStorage.getItem('userName')?.trim();
     const currentUserProfile = sessionStorage.getItem('profilePhotoUrl');
 
-    console.log('Current User:', currentUser);
-    console.log('Current User Profile URL:', currentUserProfile);
-    console.log('All Active Users:', users);
-
     // Filter out the current user from the active users
     const filteredUsers = users.filter(user => user.userName.trim() !== currentUser);
-    console.log('Filtered users for display:', filteredUsers);
 
     return (
         <div className="chat__sidebar">
@@ -34,10 +30,9 @@ const ChatBar = ({ socket }) => {
                     {filteredUsers.length > 0 ? (
                         filteredUsers.map((user) => (
                             <div key={user.socketID} className="user__info">
-                                <img
-                                    src={user.profilePhotoUrl || '/default-profile.png'}
-                                    alt={`${user.userName}'s profile`}
-                                    className="user__photo"
+                                <StyledAvatar 
+                                    profilePhotoUrl={user.profilePhotoUrl} 
+                                    userName={user.userName}
                                 />
                                 <p>{user.userName}</p>
                             </div>
@@ -48,10 +43,9 @@ const ChatBar = ({ socket }) => {
 
                     {currentUser && (
                         <div className="user__info current-user">
-                            <img
-                                src={currentUserProfile || '/default-profile.png'}
-                                alt="Your Profile"
-                                className="user__photo"
+                            <StyledAvatar 
+                                profilePhotoUrl={currentUserProfile} 
+                                userName={currentUser}
                             />
                             <p>{currentUser} (You)</p>
                         </div>

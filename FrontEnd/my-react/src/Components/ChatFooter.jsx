@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid'; // Import UUID
 import { io } from "socket.io-client";
+import { Button } from "@mui/material"
+import SendIcon from "@mui/icons-material/Send"
+import UploadFileOutlinedIcon from '@mui/icons-material/UploadFileOutlined';
+import MicIcon from '@mui/icons-material/Mic';
+import GraphicEqIcon from '@mui/icons-material/GraphicEq';
+
 
 let socket = io("http://localhost:3000", {
   transports: ['websocket'],
@@ -115,8 +121,8 @@ const ChatFooter = ({ setMessages }) => {
   return (
     <div className="chat__footer">
       <form className="form" onSubmit={handleSendMessage}>
-        <label className="attach__btn">
-          Attach
+      <label className="attach__btn" style={{ cursor: 'pointer', textAlign: 'center' }}>
+          <UploadFileOutlinedIcon style={{ fontSize: 35, color: '#00000', marginTop:'10px' }} /> 
           <input
             type="file"
             onChange={handleFileChange}
@@ -126,10 +132,26 @@ const ChatFooter = ({ setMessages }) => {
         </label>
         {file && <span className="file-name">{file.name}</span>}
 
-         {/* Audio recording button */}
-         <button className="audioBtn" type="button" onClick={handleAudioRecording}>
-            {isRecording ? 'Stop Recording' : 'Record Audio'}
-         </button>
+        {/* Audio recording button */}
+        {/* Audio recording button */}
+        <button
+          className="audioBtn"
+          type="button"
+          onClick={handleAudioRecording}
+          style={{
+            background: 'none',
+            border: 'none',
+            padding: 0,
+            cursor: 'pointer',
+          }} // Remove default button styles
+        >
+          {isRecording ? (
+            <GraphicEqIcon style={{ color: '#000000', fontSize: 30 }} /> // When recording, show GraphicEqIcon
+          ) : (
+            <MicIcon style={{ color: '#000000', fontSize: 30 }} /> // Default, show MicIcon
+          )}
+        </button>
+
         <input
           type="text"
           placeholder="Write message"
@@ -137,7 +159,7 @@ const ChatFooter = ({ setMessages }) => {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
         />
-        <button type="submit" className="sendBtn">SEND</button>
+         <Button type="submit" className="sendBtn" variant="filled" endIcon={<SendIcon style = {{color :"#0b57d0", fontSize: 30}}/>}></Button>
       </form>
     </div>
   );

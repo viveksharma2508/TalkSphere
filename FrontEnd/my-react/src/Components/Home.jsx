@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Container, TextField, Button, Typography, Box } from '@mui/material';
+import Avatar from '@mui/material/Avatar';
+import PhotoCamera from '@mui/icons-material/PhotoCamera';
 
 const Home = ({ socket }) => {
   const navigate = useNavigate();
@@ -15,10 +18,10 @@ const Home = ({ socket }) => {
       sessionStorage.setItem('userName', userName);
       sessionStorage.setItem('profilePhotoUrl', photoUrl);
 
-      socket.emit('newUser', { 
-        userName, 
-        profilePhotoUrl: photoUrl, 
-        socketID: socket.id 
+      socket.emit('newUser', {
+        userName,
+        profilePhotoUrl: photoUrl,
+        socketID: socket.id,
       });
 
       navigate('/chat');
@@ -60,41 +63,73 @@ const Home = ({ socket }) => {
   };
 
   return (
-    <form className='home__container' onSubmit={handleSubmit}>
-      <h2>Sign in to Open Chat</h2>
-      
-      <label htmlFor='username'>Username</label>
-      <input 
-        type='text'
-        value={userName}
-        minLength={6}
-        name='username'
-        id='username'
-        className='username__input'
-        onChange={(e) => setUserName(e.target.value)}
-        required
-      />
-      
-      <label htmlFor='profilePhoto'>Profile Photo</label>
-      <label htmlFor='profilePhoto' className='attach__btn'>
-        {profilePhoto ? profilePhoto.name : 'Add Profile Photo'}
-      </label>
-      <input 
-        type='file'
-        name='profilePhoto'
-        id='profilePhoto'
-        accept='image/*'
-        className='profilePhoto__input'
-        onChange={handlePhotoChange}
-        style={{ display: 'none' }} // Hide the default file input
-      />
-      
-      <button type="submit" disabled={userName.length < 6}>
-        SIGN IN
-      </button>
-    </form>
+    <Box
+      sx={{
+        height: '100vh',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundImage: 'url(https://c4.wallpaperflare.com/wallpaper/946/379/721/artwork-landscape-mountains-forest-wallpaper-preview.jpg)', // Replace with your background image URL
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
+      <Container
+        component="main"
+        maxWidth="xs"
+        sx={{
+          backgroundColor: '#f0f4f8',
+          borderRadius: '10px',
+          padding: '20px',
+          boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        <Typography variant="h5" sx={{ marginBottom: '20px', fontWeight: 'bold' }}>
+          Sign in to Open Chat
+        </Typography>
+
+        <TextField
+          variant="outlined"
+          required
+          fullWidth
+          label="Username"
+          value={userName}
+          onChange={(e) => setUserName(e.target.value)}
+          inputProps={{ minLength: 6 }}
+          sx={{ marginBottom: '20px' }}
+        />
+
+        <label htmlFor="profilePhoto" style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', cursor: 'pointer' }}>
+          <Avatar sx={{ marginRight: '10px', bgcolor: 'primary.main' }}>
+            <PhotoCamera />
+          </Avatar>
+          <span>{profilePhoto ? profilePhoto.name : 'Add Profile Photo'}</span>
+        </label>
+        <input
+          type="file"
+          name="profilePhoto"
+          id="profilePhoto"
+          accept="image/*"
+          onChange={handlePhotoChange}
+          style={{ display: 'none' }} // Hide the default file input
+        />
+
+        <Button
+          variant="contained"
+          color="primary"
+          fullWidth
+          onClick={handleSubmit}
+          disabled={userName.length < 6}
+          sx={{ marginTop: '20px' }}
+        >
+          SIGN IN
+        </Button>
+      </Container>
+    </Box>
   );
 };
 
 export default Home;
-

@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id            Int       @id @default(autoincrement())
+  userName      String    @unique
+  profilePhoto  String?   // To store the profile photo URL
+  createdAt     DateTime  @default(now())
+  messages      Message[]
+  sentChats     Chat[]    @relation("Sender")
+  receivedChats Chat[]    @relation("Receiver")
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  content   String
+  userId    Int
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  chats     Chat[]   // Added back-reference to `Chat`
+}
+
+model Chat {
+  id          Int      @id @default(autoincrement())
+  senderId    Int
+  receiverId  Int
+  messageId   Int
+  createdAt   DateTime @default(now())
+  sender      User     @relation("Sender", fields: [senderId], references: [id])
+  receiver    User     @relation("Receiver", fields: [receiverId], references: [id])
+  message     Message  @relation(fields: [messageId], references: [id])
+}

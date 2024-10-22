@@ -81,16 +81,31 @@ body {
   background-color: #f9f5eb;
 }
 
+
 .leaveChat__btn {
-  padding: 10px;
-  width: 150px;
-  border: none;
-  outline: none;
-  background-color: #d1512d;
-  cursor: pointer;
-  color: #eae3d2;
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  border: 2px solid #000000; /* Border color */
   border-radius: 5px;
+  background-color: transparent;
+  color: #000000; /* Text color */
+  font-weight: bold; /* Bold text */
+  transition: background-color 0.3s, transform 0.3s; /* Transition effects */
+  cursor: pointer;
+  outline: none;
 }
+
+.leaveChat__btn:hover {
+  background-color: #333; /* Background color on hover */
+  color: white; /* Text color on hover */
+  transform: scale(1.05); /* Scale effect */
+}
+
+.leave-chat-text {
+  margin-left: 8px; /* Space between icon and text */
+}
+
 
 .message__container {
   width: 100%;
@@ -101,6 +116,8 @@ body {
 }
 
 .chat__footer {
+  position: fixed;
+  bottom: 0;
   padding: 10px;
   background-color: #f9f5eb;
   height: 10vh; /* Ensure footer has a fixed height */
@@ -155,20 +172,6 @@ body {
   border-radius: 4px;
 }
 
-.sendBtn {
-  background-color: #000000;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  font-weight: bold;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.sendBtn:hover {
-  background-color: #218838;
-}
 
 input[type="file"] {
   display: none;
@@ -183,5 +186,6 @@ input[type="file"] {
 .attach__btn {
   margin: 0 10px;
 }
+
 
 
