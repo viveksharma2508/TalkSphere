@@ -20,13 +20,7 @@
       },
       {
         "source": "/(.*)", 
-        "destination": "/FrontEnd/my-react/dist/$1"
-      }
-    ],
-    "routes": [
-      {
-        "src": "/(.*)",
-        "dest": "/FrontEnd/my-react/dist/index.html"
+        "destination": "/FrontEnd/my-react/dist/index.html"
       }
     ]
   }
