@@ -2,10 +2,10 @@
     "version": 2,
     "builds": [
       {
-        "src": "Frontend/my-react/package.json",
+        "src": "FrontEnd/my-react/package.json",
         "use": "@vercel/static-build",
         "config": {
-          "distDir": "Frontend/my-react/dist"
+          "distDir": "FrontEnd/my-react/dist"
         }
       },
       {
@@ -13,14 +13,20 @@
         "use": "@vercel/node"
       }
     ],
-    "routes": [
+    "rewrites": [
       {
-        "src": "/api/(.*)",
-        "dest": "/BackEnd/server.js"
+        "source": "/api/(.*)", 
+        "destination": "/BackEnd/server.js"
       },
       {
+        "source": "/(.*)", 
+        "destination": "/FrontEnd/my-react/dist/$1"
+      }
+    ],
+    "routes": [
+      {
         "src": "/(.*)",
-        "dest": "Frontend/my-react/dist/$1"
+        "dest": "/FrontEnd/my-react/dist/index.html"
       }
     ]
   }
