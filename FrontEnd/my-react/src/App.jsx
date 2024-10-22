@@ -8,7 +8,7 @@ const App = () => {
   const socket = io('http://localhost:3000'); // Adjust your server URL as needed
 
   return (
-    <Router>
+    <Router basename="/"> {/* Add basename prop */}
       <Routes>
         <Route path="/" element={<Home socket={socket} />} />
         <Route path="/chat" element={<ChatPage socket={socket} />} />
