@@ -163,7 +163,7 @@ app.post('/upload', upload.single('profilePhoto'), (req, res) => {
   if (!req.file) {
     return res.status(400).send('No file uploaded');
   }
-  const photoUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+  const photoUrl = `${req.protocol}://${req.headers.host}/uploads/${req.file.filename}`;
   res.json({ photoUrl });
 });
 
