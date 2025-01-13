@@ -1,0 +1,201 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+html, body {
+  height: 100%; /* Ensure the body takes full height */
+}
+
+body {
+  display: flex; /* Use flexbox for main alignment */
+  flex-direction: column; /* Stack the body content vertically */
+}
+
+.home__container {
+  width: 100%;
+  height: calc(100vh - 20vh); /* Adjust height for header/footer */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden; /* Prevent overflow */
+}
+
+.home__container > * {
+  margin-bottom: 10px;
+}
+
+.username__input {
+  padding: 10px;
+  width: 50%;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+.home__cta {
+  width: 200px;
+  padding: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #607eaa;
+  color: #f9f5eb;
+  outline: none;
+  border: none;
+  border-radius: 5px;
+}
+
+.chat {
+  width: 100%;
+  height: 100vh; /* Full viewport height */
+  display: flex;
+}
+
+.chat__sidebar {
+  height: 100%;
+  background-color: #f9f5eb;
+  flex: 0.2; /* Takes 20% of the width */
+  padding: 20px;
+  border-right: 1px solid #fdfdfd;
+  overflow-y: auto; /* Enable scrolling if needed */
+}
+
+.chat__main {
+  height: 100%;
+  flex: 0.8; /* Takes 80% of the width */
+  display: flex;
+  flex-direction: column; /* Stack children vertically */
+}
+
+.chat__mainHeader {
+  width: 100%;
+  height: 10vh; /* Fixed height for header */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  background-color: #f9f5eb;
+}
+
+
+.leaveChat__btn {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  border: 2px solid #000000; /* Border color */
+  border-radius: 5px;
+  background-color: transparent;
+  color: #000000; /* Text color */
+  font-weight: bold; /* Bold text */
+  transition: background-color 0.3s, transform 0.3s; /* Transition effects */
+  cursor: pointer;
+  outline: none;
+}
+
+.leaveChat__btn:hover {
+  background-color: #333; /* Background color on hover */
+  color: white; /* Text color on hover */
+  transform: scale(1.05); /* Scale effect */
+}
+
+.leave-chat-text {
+  margin-left: 8px; /* Space between icon and text */
+}
+
+
+.message__container {
+  width: 100%;
+  flex: 1; /* Take up remaining space */
+  background-color: #fff;
+  padding: 20px;
+  overflow-y: auto; /* Scrollable area for messages */
+}
+
+.chat__footer {
+  position: relative;
+  bottom: 0;
+  padding: 10px;
+  background-color: #f9f5eb;
+  height: 10vh; /* Ensure footer has a fixed height */
+  display: flex; /* Flex container for footer */
+  align-items: center;
+}
+
+.sender__name {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.user {
+  color: blue; /* Color for user messages */
+}
+
+.recipient {
+  color: green; /* Color for recipient messages */
+}
+
+.message__sender {
+  background-color: #e0f7fa; /* Light background for sender's message */
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.message__recipient {
+  background-color: #ffe0b2; /* Light background for recipient's message */
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.user__photo {
+  width: 100px;  /* Increased width */
+  height: 100px; /* Increased height */
+  object-fit: cover; /* Ensure the image fills the dimensions without distortion */
+  border-radius: 50%; /* Make the image circular */
+}
+
+.current-user .user__photo {
+  width: 100px;  /* Consistent width for current user */
+  height: 100px; /* Consistent height for current user */
+  object-fit: cover; /* Maintain cover fit */
+  border-radius: 50%; /* Keep the current user image circular */
+}
+
+.message {
+  flex-grow: 1;
+  padding: 8px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+
+input[type="file"] {
+  display: none;
+}
+
+.file-name {
+  margin-left: 10px; /* Spacing between the button and file name */
+  color: #555;       /* Color of the file name */
+  font-style: italic; /* Italics for emphasis */
+}
+
+.attach__btn {
+  margin: 0 10px;
+}
+
+
+/* Constrain media elements (images and videos) in the chat */
+.chat-media {
+  max-width: 100%; /* Ensure the media does not exceed the container's width */
+  max-height: 400px; /* Limit the maximum height */
+  object-fit: contain; /* Maintain the aspect ratio without distortion */
+  border-radius: 10px; /* Optional: Add rounded corners for a smooth look */
+}
+
+
+
+
