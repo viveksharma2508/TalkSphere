@@ -121,6 +121,7 @@
 //   console.log(`Server is running on port ${PORT}`);
 // });
 
+
 const express = require('express');
 const http = require('http');
 const socketIO = require('socket.io');
@@ -130,16 +131,18 @@ const path = require('path');
 
 const app = express();
 const server = http.createServer(app);
+const users = []; // Declare users array
+
 const io = socketIO(server, {
   cors: {
-    origin: ["http://localhost:5173", "https://talksphere-2.onrender.com"], 
+    origin: ["http://localhost:5173", "https://talksphere-2.onrender.com"],
     methods: ["GET", "POST"]
   }
 });
 
 // Middleware
 app.use(cors({
-  origin: ["http://localhost:5173", "https://talksphere-2.onrender.com"], 
+  origin: ["http://localhost:5173", "https://talksphere-2.onrender.com"],
   methods: ["GET", "POST"],
   credentials: true
 }));
