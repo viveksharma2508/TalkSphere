@@ -68,16 +68,16 @@
 Messages are exchanged in real-time using Socket.io, ensuring that all connected users see messages instantly.
 
 ### 2. Media and File Uploads
-Users can send images, videos, and audio clips directly in the chat. For example, a user can upload a `.png`, `.jpg`, `.mp4`, or even record audio messages.
+Users can send images, videos, and audio clips directly in the chat. For example, a user can upload a `.jpg`, `.jpg`, `.mp4`, or even record audio messages.
 
 - **Images & Videos:**
-  ![Image Example](./ScreenShots/Screenshot%20(172).png)
-  ![Video Example](./ScreenShots/Screenshot%20(174).png)
+  ![Image Example](./ScreenShots/Screenshot%20(172).jpg)
+  ![Video Example](./ScreenShots/Screenshot%20(174).jpg)
 
 - **Audio Recording:**
   The app provides an option for in-browser audio recording. Users can start and stop recording, and the message gets transmitted in `.ogg` format.
   
-  ![Audio Example](./screenshots/audio-example.png)
+  ![Audio Example](./screenshots/audio-example.jpg)
 
 ### 3. User Profiles
 Upon joining, users can choose a username and optionally upload a profile photo.
@@ -86,7 +86,7 @@ Upon joining, users can choose a username and optionally upload a profile photo.
 ### 4. Audio Recording Feature
 Users can record audio directly in the chat interface. Once the recording is stopped, the message is sent as an audio file.
   
-![Audio Recording Example](![Chat Layout](./ScreenShots/Screenshot%20(173).png))
+![Audio Recording Example](![Chat Layout](./ScreenShots/Screenshot%20(173).jpg))
 
 ### 5. Leave Chat
 Users can leave the chat anytime by clicking the 'Leave Chat' button, which also clears session data.

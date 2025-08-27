@@ -1,134 +1,222 @@
-import React, { useState } from 'react';
+
+// src/Components/ChatFooter.jsx
+import React, { useState, useRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { Button } from "@mui/material";
-import SendIcon from "@mui/icons-material/Send";
+import {
+  IconButton,
+  Tooltip,
+  InputBase,
+  Paper,
+  Chip
+} from '@mui/material';
+import SendIcon from '@mui/icons-material/Send';
 import UploadFileOutlinedIcon from '@mui/icons-material/UploadFileOutlined';
 import MicIcon from '@mui/icons-material/Mic';
 import GraphicEqIcon from '@mui/icons-material/GraphicEq';
+import CloseIcon from '@mui/icons-material/Close';
 
-const ChatFooter = ({ socket, setMessages }) => {
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+
+const fileToBase64 = (file) =>
+  new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => res(r.result);
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
+
+export default function ChatFooter({ socket, user, setMessages }) {
   const [message, setMessage] = useState('');
   const [file, setFile] = useState(null);
   const [isRecording, setIsRecording] = useState(false);
   const [mediaRecorder, setMediaRecorder] = useState(null);
   const [audioMessage, setAudioMessage] = useState(null);
+  const fileInputRef = useRef(null);
 
-  const handleSendMessage = async (e) => {
-    e.preventDefault();
-
-    if ((message.trim() || file || audioMessage) && sessionStorage.getItem('userName')) {
-      let mediaUrl = null;
-
-      if (file) {
-        const formData = new FormData();
-        formData.append('profilePhoto', file);
-
-        try {
-          const response = await fetch('https://talksphere-1.onrender.com/upload', {
-            method: 'POST',
-            body: formData,
-          });
-
-          if (response.ok) {
-            const result = await response.json();
-            mediaUrl = result.photoUrl;
-          } else {
-            console.error('Error uploading file');
-          }
-        } catch (error) {
-          console.error('File upload failed:', error);
-        }
-      }
-
-      const newMessage = {
-        text: message.trim() || null,
-        name: sessionStorage.getItem('userName'),
-        id: uuidv4(),
-        socketID: socket.id,
-        mediaUrl,
-        audio: audioMessage || null,
-      };
-
-      socket.emit('message', newMessage);
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
-      setMessage('');
-      setFile(null);
-      setAudioMessage(null);
-    }
-  };
+  const disabled = !user || !socket?.connected || (!message.trim() && !file && !audioMessage);
 
   const handleFileChange = (e) => {
-    if (e.target.files.length > 0) {
-      setFile(e.target.files[0]);
-      console.log("File selected:", e.target.files[0].name);
+    if (e.target.files?.length) setFile(e.target.files[0]);
+  };
+
+  const clearFile = () => {
+    setFile(null);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  const handleAudioRecording = async () => {
+    if (isRecording) {
+      mediaRecorder?.stop();
+      setIsRecording(false);
+      return;
+    }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const rec = new MediaRecorder(stream);
+      setMediaRecorder(rec);
+      let chunks = [];
+      rec.ondataavailable = (ev) => chunks.push(ev.data);
+      rec.onstop = () => {
+        const blob = new Blob(chunks, { type: 'audio/ogg' });
+        const r = new FileReader();
+        r.onloadend = () => setAudioMessage(r.result);
+        r.readAsDataURL(blob);
+        chunks = [];
+      };
+      rec.start();
+      setIsRecording(true);
+    } catch (e) {
+      console.error('Audio capture failed:', e);
     }
   };
 
-  const handleAudioRecording = () => {
-    if (isRecording) {
-      mediaRecorder.stop();
-      setIsRecording(false);
-    } else {
-      navigator.mediaDevices.getUserMedia({ audio: true })
-        .then((stream) => {
-          const recorder = new MediaRecorder(stream);
-          setMediaRecorder(recorder);
-          let audioChunks = [];
+  const handleSendMessage = async (e) => {
+    e?.preventDefault?.();
+    if (!socket?.connected || !user) return;
+    if (!message.trim() && !file && !audioMessage) return;
 
-          recorder.ondataavailable = (event) => {
-            audioChunks.push(event.data);
-          };
-
-          recorder.onstop = () => {
-            const audioBlob = new Blob(audioChunks, { type: 'audio/ogg' });
-            const fileReader = new FileReader();
-
-            fileReader.readAsDataURL(audioBlob);
-            fileReader.onloadend = () => {
-              setAudioMessage(fileReader.result);
-            };
-
-            audioChunks = [];
-          };
-
-          recorder.start();
-          setIsRecording(true);
-        })
-        .catch((error) => {
-          console.error("Error capturing audio:", error);
+    // upload (best-effort)
+    let attachmentUrl = null;
+    try {
+      if (file) {
+        const b64 = await fileToBase64(file);
+        const up = await fetch(`${API_BASE}/api/upload`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ file: b64, fileName: file.name || 'upload' }),
         });
+        if (up.ok) {
+          const data = await up.json();
+          attachmentUrl = data.photoUrl || data.thumbnailUrl || null;
+        }
+      }
+    } catch (e) {
+      console.warn('Upload failed (non-blocking):', e.message);
+    }
+
+    const msg = {
+      id: uuidv4(),
+      text: message.trim() || null,
+      attachmentUrl,
+      audio: audioMessage || null,
+      senderId: user._id,
+      sender: { _id: user._id, username: user.username, photoUrl: user.photoUrl || null },
+      createdAt: new Date().toISOString(),
+    };
+
+    // optimistic UI
+    setMessages((prev) => [...prev, msg]);
+    socket.emit('message', msg);
+
+    setMessage('');
+    clearFile();
+    setAudioMessage(null);
+  };
+
+  const onKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
     }
   };
 
   return (
     <div className="chat__footer">
-      <form className="form" onSubmit={handleSendMessage}>
-        <label className="attach__btn">
-          <UploadFileOutlinedIcon style={{ fontSize: 35 }} />
-          <input
-            type="file"
-            onChange={handleFileChange}
-            accept="image/*, video/*"
-            style={{ display: 'none' }}
-          />
-        </label>
-        {file && <span className="file-name">{file.name}</span>}
-
-        <button type="button" onClick={handleAudioRecording} className="audioBtn">
-          {isRecording ? <GraphicEqIcon style={{ fontSize: 30 }} /> : <MicIcon style={{ fontSize: 30 }} />}
-        </button>
-
+      <Paper
+        component="form"
+        onSubmit={handleSendMessage}
+        elevation={0}
+        className="footer__bar"
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: '40px 40px 1fr 44px',
+          alignItems: 'center',
+          gap: 1,
+          p: 1,
+          borderRadius: 2,
+          border: '1px solid #e9e3d6',
+          backgroundColor: '#fff',
+        }}
+      >
+        {/* Upload */}
+        <Tooltip title={file ? 'Change file' : 'Attach'}>
+          <IconButton
+            size="small"
+            className="icon-btn"
+            onClick={() => fileInputRef.current?.click()}
+            sx={{ width: 40, height: 40, borderRadius: 1.25 }}
+          >
+            <UploadFileOutlinedIcon fontSize="medium" />
+          </IconButton>
+        </Tooltip>
         <input
-          type="text"
-          placeholder="Write message"
-          className="message"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          ref={fileInputRef}
+          type="file"
+          accept="image/*,video/*"
+          onChange={handleFileChange}
+          style={{ display: 'none' }}
         />
-        <Button type="submit" className="sendBtn" variant="filled" endIcon={<SendIcon style={{ fontSize: 30 }} />} />
-      </form>
+
+        {/* Mic / Recording */}
+        <Tooltip title={isRecording ? 'Stop recording' : 'Record voice'}>
+          <IconButton
+            size="small"
+            className="icon-btn"
+            onClick={handleAudioRecording}
+            color={isRecording ? 'error' : 'default'}
+            sx={{ width: 40, height: 40, borderRadius: 1.25 }}
+          >
+            {isRecording ? <GraphicEqIcon /> : <MicIcon />}
+          </IconButton>
+        </Tooltip>
+
+        {/* Message input + file chip inline */}
+        <div className="input-wrap" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          {file && (
+            <Chip
+              size="small"
+              color="default"
+              label={file.name}
+              onDelete={clearFile}
+              deleteIcon={<CloseIcon />}
+              sx={{ maxWidth: 220 }}
+            />
+          )}
+          <InputBase
+            placeholder="Write message"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            onKeyDown={onKeyDown}
+            className="message"
+            sx={{
+              flex: 1,
+              px: 1.5,
+              py: 1,
+              border: '1px solid #e9e3d6',
+              borderRadius: 1.25,
+            }}
+          />
+        </div>
+
+        {/* Send */}
+        <Tooltip title="Send">
+          <span>
+            <IconButton
+              type="submit"
+              disabled={disabled}
+              color="primary"
+              sx={{
+                width: 44,
+                height: 40,
+                borderRadius: 1.25,
+                opacity: disabled ? 0.6 : 1,
+              }}
+            >
+              <SendIcon />
+            </IconButton>
+          </span>
+        </Tooltip>
+      </Paper>
     </div>
   );
-};
-
-export default ChatFooter;
+}

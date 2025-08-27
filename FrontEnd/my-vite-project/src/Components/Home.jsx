@@ -42,7 +42,7 @@ const Home = ({ socket }) => {
     formData.append('profilePhoto', file);
 
     try {
-      const response = await fetch('https://talksphere-1.onrender.com/upload', {
+      const response = await fetch('https://localhost:3000.com/upload', {
         method: 'POST',
         body: formData,
       });
